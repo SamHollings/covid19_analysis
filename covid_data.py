@@ -10,7 +10,7 @@ import re
 
 
 def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dict, str]],
-                          print_url=False, start_page = 1, end_page=None) -> pd.Dataframe:
+                          print_url=False, start_page = 1, end_page=None) -> pd.DataFrame:
     """This is lifted from the NHSE website: https://coronavirus.data.gov.uk/developers-guide
     The "filters" param is used to determine what geographical level you will pull,
     whilst the "structure" param describes the fields you will pull. The function will loop
