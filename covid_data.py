@@ -77,17 +77,18 @@ def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dic
     page_number = start_page
     current_data = dict(pagination={'next':True}) # dummy initial "next" pagination
 
-    while current_data["pagination"]["next"] is not None:
+    error = None
+    while current_data["pagination"]["next"] is not None and error is None:
         api_params["page"] = page_number
         if page_number == end_page: break
 
         try:
           response = get(endpoint, params=api_params, timeout=10)
         except Exception as error:
-          print(previous_url)
-          print(f'Reached page {previous_url[-2:]}')
-          print(error)
-          break
+          print("    Trying again...")
+          #print(f'Reached page {previous_url[-2:]}')
+          #print(error)
+          continue
         previous_url = response.url
         if print_url is True:
           print(response.url)
@@ -101,7 +102,9 @@ def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dic
         
         data.extend(page_data)
 
+        print(f'{str.join(";", filters)} page {page_number}: {response.url}')
         page_number += 1
+        error=None
 
     return pd.DataFrame(data)
  
