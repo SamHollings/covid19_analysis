@@ -7,10 +7,11 @@ import zipfile
 import requests
 import io
 import re
+import numpy.random as random
 
 
 def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dict, str]],
-                          print_url=False, start_page = 1, end_page=None) -> pd.DataFrame:
+                          start_page = 1, end_page=None) -> pd.DataFrame:
     """This is lifted from the NHSE website: https://coronavirus.data.gov.uk/developers-guide
     The "filters" param is used to determine what geographical level you will pull,
     whilst the "structure" param describes the fields you will pull. The function will loop
@@ -77,21 +78,16 @@ def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dic
     page_number = start_page
     current_data = dict(pagination={'next':True}) # dummy initial "next" pagination
 
-    error = None
-    while current_data["pagination"]["next"] is not None and error is None:
+    while current_data["pagination"]["next"] is not None:
         api_params["page"] = page_number
         if page_number == end_page: break
 
         try:
           response = get(endpoint, params=api_params, timeout=10)
         except Exception as error:
-          print("    Trying again...")
-          #print(f'Reached page {previous_url[-2:]}')
-          #print(error)
+          print(f"    Trying page {page_number} again...")
           continue
-        previous_url = response.url
-        if print_url is True:
-          print(response.url)
+
         if response.status_code >= HTTPStatus.BAD_REQUEST:
             raise RuntimeError(f'Request failed: {response.text}')
         elif response.status_code == HTTPStatus.NO_CONTENT:
@@ -104,26 +100,33 @@ def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dic
 
         print(f'{str.join(";", filters)} page {page_number}: {response.url}')
         page_number += 1
-        error=None
 
     return pd.DataFrame(data)
- 
-
-def google_mobility(country_filter="GB"):
-  """Pulls data from the google mobility report website https://www.google.com/covid19/mobility/.
-  Specify the country to filter by (two character code), i.e. GB for United Kingdom. If you leave 
-  it blank, i.e. "", then you get everything. 
-  """
-  response = requests.get("https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip")
-  zip_file = zipfile.ZipFile(io.BytesIO(response.content))
-  GB_google_mobility_report_paths = list(filter(lambda x: country_filter in x, zip_file.namelist()))
-  df_gb_google_mobility_report = pd.concat([pd.read_csv(zip_file.open(file)) for file in GB_google_mobility_report_paths],axis=0)
-  return df_gb_google_mobility_report
 
 
-def apple_mobility():
-  """Pulls data from the apple mobility report website https://covid19.apple.com/mobility
-  """
-  df_apple_mobility_report = pd.read_csv("https://covid19-static.cdn-apple.com/covid19-mobility-data/2019HotfixDev25/v3/en-us/applemobilitytrends-2020-10-30.csv")
-  return df_apple_mobility_report
+def interpolate_early_data(df : pd.DataFrame,column : str, 
+                           zeropoints : list = [-40,-20] ) -> pd.Series:
+    """
+    Interpolate the from zero up to the start of the data, prefilling the defined 
+    "zeropoints" range with 0s (relative to the first filled data point).
+    """
+    df = df.copy()
+    
+    earliest_filled_index = df[column].dropna().index[0]
+    zero_points = [earliest_filled_index+zeropoints[0],earliest_filled_index+zeropoints[1]]
 
+    # set some earlier points to zero to mark the area between which we need to interpolate
+    df = pd.concat([pd.DataFrame(index=range(zero_points[0],earliest_filled_index-1), columns = [column]),df[[column]].dropna()])
+    df.loc[[zero_points[0],zero_points[1]],column] = 0
+
+    # do the interpolation
+    df[column] = df[column].interpolate(method='pchip', limit_direction='both', limit=None)
+
+    # add some noise
+    noise_scale_factor = 1.0
+    interp_data = df.loc[df[column].index[0]:earliest_filled_index]
+    scaling_noise_factor = pd.DataFrame({column : (random.rand(len(interp_data))-0.5)}, index = interp_data.index)*noise_scale_factor
+    noisy_interp_data = (interp_data + (interp_data * scaling_noise_factor)) 
+
+    df.loc[df[column].index[0]:earliest_filled_index] = noisy_interp_data
+    return df[column]
