@@ -1,5 +1,7 @@
 # covid19_analysis
-NHS related COVID-19 analysis and tools
+Tools for NHS-related COVID-19 data analysis. Image below from NHSE&I feed (functions below):
+
+![alt text](https://github.com/SamHollings/covid19_analysis/blob/main/covid_data.png?raw=true)
 
 ## Manifest:
 - **covid_data.py** - this contains functions for extracting data from the NHSE API, Google Mobility and Apple Mobility
