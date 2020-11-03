@@ -52,4 +52,26 @@ df_ltla_nhse_feed = covid_data.get_paginated_dataset([f"areaType=ltla"], query_s
 # google and apple mobility
 df_gb_google_mobility_report = covid_data.google_mobility()
 df_apple_mobility_report = covid_data.apple_mobility()
+
+# Make some plots of the data
+import matplotlib.pyplot as plt
+fig, ax = plt.subplots(2,2,figsize = (20,10));
+# NHS England tests data
+df_england_nhse_feed.set_index('date').newAdmissions.rename("newAdmissions England").plot(ax=ax[0][0]);
+df_uk_wide_nhse_feed.set_index('date').newAdmissions.rename("newAdmissions UK").plot(ax=ax[0][0]);
+df_england_nhse_feed.set_index('date').newDeaths28DaysByPublishDate.rename("newDeaths28DaysByPublishDate England").plot(ax=ax[0][0]);
+df_uk_wide_nhse_feed.set_index('date').newDeaths28DaysByPublishDate.rename("newDeaths28DaysByPublishDate UK").plot(ax=ax[0][0]);
+ax[0][0].legend()
+# Google mobility
+(df_gb_google_mobility_report[df_gb_google_mobility_report.sub_region_1.isna()]
+ .set_index('date')[['retail_and_recreation_percent_change_from_baseline',
+                    'grocery_and_pharmacy_percent_change_from_baseline',
+                    'parks_percent_change_from_baseline',
+                    'transit_stations_percent_change_from_baseline',
+                    'workplaces_percent_change_from_baseline',
+                    'residential_percent_change_from_baseline']]).plot(ax=ax[0][1]);
+
+df_nhsregion_nhse_feed.set_index(['date','name'])[['covidOccupiedMVBeds']].unstack().rolling(7).sum().plot(ax=ax[1][0],title='Mech Vent Beds');
+df_nhsregion_nhse_feed.set_index(['date','name'])[['hospitalCases']].unstack().rolling(7).sum().plot(ax=ax[1][1],title='hospital cases');
+plt.show()
 ```
