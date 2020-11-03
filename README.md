@@ -81,6 +81,6 @@ ax[0][0].legend()
                     'residential_percent_change_from_baseline']]).plot(ax=ax[0][1], title='Google mobility England');
 
 df_nhsregion_nhse_feed.set_index(['date','name'])[['covidOccupiedMVBeds']].unstack().rolling(7).sum().plot(ax=ax[1][0],title='Mech Vent Beds England Regions');
-df_apple_mobility_report.set_index('date')[['driving','walking','transit']].plot(ax=ax[1][1], title='Apple Mobility England')
+df_apple_mobility_report[(df_apple_mobility_report['region'] == 'England')].set_index('date')[['driving','walking','transit']].plot(ax=ax[1][1], title='Apple Mobility England')
 plt.show()
 ```
