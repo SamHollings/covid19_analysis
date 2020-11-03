@@ -11,55 +11,16 @@ Pulling the data and making the above plot:
 ```
 import covid_data
 
-query_structure = {"date": "date",
-                   "areatype": "areaType",
-                  "name": "areaName",
-                  "code": "areaCode",
-                  "newAdmissions": "newAdmissions",
-                  "newPillarTwoTestsByPublishDate": "newPillarTwoTestsByPublishDate",
-                  "plannedCapacityByPublishDate" : "plannedCapacityByPublishDate",
-                  "newTestsByPublishDate": "newTestsByPublishDate",
-                  "covidOccupiedMVBeds": "covidOccupiedMVBeds",
-                   "hospitalCases":"hospitalCases",
-                   "newCasesBySpecimenDate":"newCasesBySpecimenDate",
-                   "newCasesByPublishDate":"newCasesByPublishDate",
-                   "cumCasesByPublishDate":"cumCasesByPublishDate",
-                   "newDeaths28DaysByPublishDate":"newDeaths28DaysByPublishDate",
-                   "maleCases":"maleCases",
-                   "femaleCases":"femaleCases"}
+covid_data_blob = covid_data.covid_england_data_blob()
 
-# England Only
-df_england_nhse_feed = covid_data.get_paginated_dataset([f"areaType=nation;areaName=england"], query_structure).dropna(how='all',axis=1).sort_values(['code','date',]).reset_index(drop=True)
-# All UK (some of the metrics only work for the UK as a whole...)
-df_uk_wide_nhse_feed = covid_data.get_paginated_dataset([f"areaType=overview"], query_structure).dropna(how='all',axis=1).sort_values(['code','date',]).reset_index(drop=True)
-# NHS Regions
-df_nhsregion_nhse_feed = covid_data.get_paginated_dataset([f"areaType=nhsRegion"], query_structure).dropna(how='all',axis=1).sort_values(['code','date',]).reset_index(drop=True)
-# Regions (geographic regions) - some different metrics than NHS Regions
-df_region_nhse_feed = covid_data.get_paginated_dataset([f"areaType=region"], query_structure).dropna(how='all',axis=1).sort_values(['code','date',]).reset_index(drop=True)
-
-# Changed the structure for these next two filters, because they simply don't have many of the above columns
-query_structure_2 = {"date": "date",
-                   "areatype": "areaType",
-                  "name": "areaName",
-                  "code": "areaCode",
-                   "newCasesBySpecimenDate":"newCasesBySpecimenDate",
-                   "newCasesByPublishDate":"newCasesByPublishDate",
-                   "cumCasesByPublishDate":"cumCasesByPublishDate",
-                   "newDeaths28DaysByPublishDate":"newDeaths28DaysByPublishDate",}
-# upper tier local authorities (counties and unitary authorities, i.e. Lancashire, York, Somerset, etc...)
-df_utla_nhse_feed = covid_data.get_paginated_dataset([f"areaType=utla"], query_structure_2).dropna(how='all',axis=1).sort_values(['code','date',]).reset_index(drop=True)
-# lower tier local authorities (councils and unitary authorities, i.e. Leeds council, Bradford council, York, etc...)
-df_ltla_nhse_feed = covid_data.get_paginated_dataset([f"areaType=ltla"], query_structure_2).dropna(how='all',axis=1).sort_values(['code','date',]).reset_index(drop=True)
-
-# google and apple mobility
-df_gb_google_mobility_report = covid_data.google_mobility().sort_values(["country_region_code","sub_region_1",'date']).reset_index(drop=True)
-df_apple_mobility_report = (covid_data.apple_mobility().set_index(['geo_type','region','transportation_type','alternative_name','sub-region','country'])
-                                                       .rename_axis('date',axis=1).stack()
-                                                       .unstack('transportation_type').reset_index())
-df_apple_mobility_report = df_apple_mobility_report[(df_apple_mobility_report.country == "United Kingdom") & 
-                                                    ((df_apple_mobility_report['region'] == 'England') 
-                                                    | (df_apple_mobility_report['sub-region'] == 'England')
-                                                    )]
+df_england_nhse_feed =  covid_data_blob['england_nhse']
+df_uk_wide_nhse_feed = covid_data_blob['uk_nhse']
+df_nhsregion_nhse_feed = covid_data_blob['nhsregion_nhse']
+df_region_nhse_feed = covid_data_blob['region_nhse']
+df_utla_nhse_feed = covid_data_blob['utla_nhse']
+df_ltla_nhse_feed = covid_data_blob['ltla_nhse']
+df_gb_google_mobility_report = covid_data_blob['google_mobility']
+df_apple_mobility_report = covid_data_blob['apple_mobility']
 
 # Make some plots of the data
 import matplotlib.pyplot as plt
@@ -90,25 +51,9 @@ Interpolation of the start of any missing data (very simple, just using pandas i
 ```import matplotlib.pyplot as plt
 import covid_data
 
-query_structure = {"date": "date",
-                   "areatype": "areaType",
-                  "name": "areaName",
-                  "code": "areaCode",
-                  "newAdmissions": "newAdmissions",
-                  "newPillarTwoTestsByPublishDate": "newPillarTwoTestsByPublishDate",
-                  "plannedCapacityByPublishDate" : "plannedCapacityByPublishDate",
-                  "newTestsByPublishDate": "newTestsByPublishDate",
-                  "covidOccupiedMVBeds": "covidOccupiedMVBeds",
-                   "hospitalCases":"hospitalCases",
-                   "newCasesBySpecimenDate":"newCasesBySpecimenDate",
-                   "newCasesByPublishDate":"newCasesByPublishDate",
-                   "cumCasesByPublishDate":"cumCasesByPublishDate",
-                   "newDeaths28DaysByPublishDate":"newDeaths28DaysByPublishDate",
-                   "maleCases":"maleCases",
-                   "femaleCases":"femaleCases"}
+covid_data_blob = covid_data.covid_england_data_blob()
 
-# England Only
-df_england_nhse_feed = covid_data.get_paginated_dataset([f"areaType=nation;areaName=england"], query_structure).dropna(how='all',axis=1).sort_values(['code','date',]).reset_index(drop=True)
+df_england_nhse_feed =  covid_data_blob['england_nhse']
 
 # interpolate and plot
 fig,ax = plt.subplots(figsize=(10,5))
