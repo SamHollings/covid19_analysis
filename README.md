@@ -1,7 +1,7 @@
 # covid19_analysis
 Tools for NHS-related COVID-19 data analysis. Image below from NHSE&I feed (functions below):
 
-![alt text](https://github.com/SamHollings/covid19_analysis/blob/main/graph/covid_data.png?raw=true)
+![four plots of covid data](https://github.com/SamHollings/covid19_analysis/blob/main/graphs/covid_data.png?raw=true)
 
 ## Manifest:
 - **covid_data.py** - this contains functions for extracting data from the NHSE API, Google Mobility and Apple Mobility
@@ -85,7 +85,7 @@ df_apple_mobility_report[(df_apple_mobility_report['region'] == 'England')].set_
 plt.show()
 ```
 Interpolation of the start of any missing data (very simple, just using pandas interpolate "pchip")
-![alt text](https://github.com/SamHollings/covid19_analysis/blob/main/graph/covid_data_interpolated.png?raw=true)
+![Interpolated plot of covid data](https://github.com/SamHollings/covid19_analysis/blob/main/graphs/covid_data_interpolated.png?raw=true)
 
 ```import matplotlib.pyplot as plt
 import covid_data
