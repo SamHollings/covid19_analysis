@@ -103,6 +103,25 @@ def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dic
 
     return pd.DataFrame(data)
 
+          
+def google_mobility(country_filter="GB"):
+  """Pulls data from the google mobility report website https://www.google.com/covid19/mobility/.
+  Specify the country to filter by (two character code), i.e. GB for United Kingdom. If you leave 
+  it blank, i.e. "", then you get everything. 
+  """
+  response = requests.get("https://www.gstatic.com/covid19/mobility/Region_Mobility_Report_CSVs.zip")
+  zip_file = zipfile.ZipFile(io.BytesIO(response.content))
+  GB_google_mobility_report_paths = list(filter(lambda x: country_filter in x, zip_file.namelist()))
+  df_gb_google_mobility_report = pd.concat([pd.read_csv(zip_file.open(file)) for file in GB_google_mobility_report_paths],axis=0)
+  return df_gb_google_mobility_report
+
+
+def apple_mobility():
+  """Pulls data from the apple mobility report website https://covid19.apple.com/mobility
+  """
+  df_apple_mobility_report = pd.read_csv("https://covid19-static.cdn-apple.com/covid19-mobility-data/2019HotfixDev25/v3/en-us/applemobilitytrends-2020-10-30.csv")
+  return df_apple_mobility_report
+
 
 def interpolate_early_data(df : pd.DataFrame,column : str, 
                            zeropoints : list = [-40,-20] ) -> pd.Series:
@@ -130,3 +149,4 @@ def interpolate_early_data(df : pd.DataFrame,column : str,
 
     df.loc[df[column].index[0]:earliest_filled_index] = noisy_interp_data
     return df[column]
+
