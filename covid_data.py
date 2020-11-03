@@ -8,6 +8,7 @@ import requests
 import io
 import re
 import numpy.random as random
+import numpy as np
 
 
 def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dict, str]],
@@ -123,30 +124,32 @@ def apple_mobility():
   return df_apple_mobility_report
 
 
-def interpolate_early_data(df : pd.DataFrame,column : str, 
+def interpolate_early_data(series : pd.Series, 
                            zeropoints : list = [-40,-20] ) -> pd.Series:
     """
     Interpolate the from zero up to the start of the data, prefilling the defined 
     "zeropoints" range with 0s (relative to the first filled data point).
     """
-    df_original = df.copy()
-    
-    earliest_filled_index = df_original[column].dropna().index[0]
-    zero_points = [earliest_filled_index+zeropoints[0],earliest_filled_index+zeropoints[1]]
+    series_original = series.copy()
+    series_without_na = series_original.dropna()
+
+    earliest_filled_index = series_without_na.index[0]
+    zero_points_index = [earliest_filled_index+zeropoints[0],earliest_filled_index+zeropoints[1]]
 
     # set some earlier points to zero to mark the area between which we need to interpolate
-    df_working = pd.concat([pd.DataFrame(index=range(zero_points[0],earliest_filled_index-1), columns = [column]),df_original[[column]].dropna()])
-    df_working.loc[[zero_points[0],zero_points[1]],column] = 0
+
+    empty_series = pd.Series(index=range(zero_points[0],earliest_filled_index-1)) # this goes from the zero point up to the start of the data
+
+    series_working = empty_series.append(series.dropna())
+    series_working.loc[zero_points_index[0]:zero_points_index[1]] = 0 # the zero point range as 0
 
     # do the interpolation
-    df_working[column] = df_working[column].interpolate(method='pchip', limit_direction='both', limit=None)
+    series_working = series_working.interpolate(method='pchip', limit_direction='both', limit=None)
 
     # add some noise
-    noise_scale_factor = 1.0
-    interp_data = df.loc[df_working[column].index[0]:earliest_filled_index]
-    scaling_noise_factor = pd.DataFrame({column : (random.rand(len(interp_data))-0.5)}, index = interp_data.index)*noise_scale_factor
-    noisy_interp_data = (interp_data + (interp_data * scaling_noise_factor)) 
+    noise_scale_factor = 0.5
+    interp_mask = pd.Series(data=np.zeros(len(series_working)),index = series_working.index, name='interp_mask')
+    interp_mask.loc[:earliest_filled_index] = random.rand(len(series_working.loc[:earliest_filled_index]))-0.5
 
-    df_original.loc[df_working[column].index[0]:earliest_filled_index] = noisy_interp_data
-    return df_original[column]
-
+    noisy_interp_data = (series_working + (interp_mask * series_working * noise_scale_factor))
+    return noisy_interp_data
