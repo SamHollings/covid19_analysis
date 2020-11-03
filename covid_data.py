@@ -129,24 +129,24 @@ def interpolate_early_data(df : pd.DataFrame,column : str,
     Interpolate the from zero up to the start of the data, prefilling the defined 
     "zeropoints" range with 0s (relative to the first filled data point).
     """
-    df = df.copy()
+    df_original = df.copy()
     
-    earliest_filled_index = df[column].dropna().index[0]
+    earliest_filled_index = df_original[column].dropna().index[0]
     zero_points = [earliest_filled_index+zeropoints[0],earliest_filled_index+zeropoints[1]]
 
     # set some earlier points to zero to mark the area between which we need to interpolate
-    df = pd.concat([pd.DataFrame(index=range(zero_points[0],earliest_filled_index-1), columns = [column]),df[[column]].dropna()])
-    df.loc[[zero_points[0],zero_points[1]],column] = 0
+    df_working = pd.concat([pd.DataFrame(index=range(zero_points[0],earliest_filled_index-1), columns = [column]),df_original[[column]].dropna()])
+    df_working.loc[[zero_points[0],zero_points[1]],column] = 0
 
     # do the interpolation
-    df[column] = df[column].interpolate(method='pchip', limit_direction='both', limit=None)
+    df_working[column] = df_working[column].interpolate(method='pchip', limit_direction='both', limit=None)
 
     # add some noise
     noise_scale_factor = 1.0
-    interp_data = df.loc[df[column].index[0]:earliest_filled_index]
+    interp_data = df.loc[df_working[column].index[0]:earliest_filled_index]
     scaling_noise_factor = pd.DataFrame({column : (random.rand(len(interp_data))-0.5)}, index = interp_data.index)*noise_scale_factor
     noisy_interp_data = (interp_data + (interp_data * scaling_noise_factor)) 
 
-    df.loc[df[column].index[0]:earliest_filled_index] = noisy_interp_data
-    return df[column]
+    df_original.loc[df_working[column].index[0]:earliest_filled_index] = noisy_interp_data
+    return df_original[column]
 
