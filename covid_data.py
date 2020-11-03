@@ -149,7 +149,7 @@ def interpolate_early_data(series : pd.Series,
     # add some noise
     noise_scale_factor = 0.5
     interp_mask = pd.Series(data=np.zeros(len(series_working)),index = series_working.index, name='interp_mask')
-    interp_mask.loc[:earliest_filled_index] = random.rand(len(series_working.loc[:earliest_filled_index]))-0.5
+    interp_mask.loc[:earliest_filled_index-1] = random.rand(len(series_working.loc[:earliest_filled_index-1]))-0.5
 
     noisy_interp_data = (series_working + (interp_mask * series_working * noise_scale_factor))
     return noisy_interp_data
