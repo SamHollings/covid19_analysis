@@ -138,7 +138,7 @@ def interpolate_early_data(series : pd.Series,
 
     # set some earlier points to zero to mark the area between which we need to interpolate
 
-    empty_series = pd.Series(index=range(zero_points[0],earliest_filled_index-1)) # this goes from the zero point up to the start of the data
+    empty_series = pd.Series(index=range(zero_points_index[0],earliest_filled_index-1)) # this goes from the zero point up to the start of the data
 
     series_working = empty_series.append(series.dropna())
     series_working.loc[zero_points_index[0]:zero_points_index[1]] = 0 # the zero point range as 0
@@ -152,4 +152,4 @@ def interpolate_early_data(series : pd.Series,
     interp_mask.loc[:earliest_filled_index-1] = random.rand(len(series_working.loc[:earliest_filled_index-1]))-0.5
 
     noisy_interp_data = (series_working + (interp_mask * series_working * noise_scale_factor))
-    return noisy_interp_data
+    return noisy_interp_data.rename(series.name)

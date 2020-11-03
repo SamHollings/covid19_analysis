@@ -1,13 +1,13 @@
 # covid19_analysis
 Tools for NHS-related COVID-19 data analysis. Image below from NHSE&I feed (functions below):
 
-![alt text](https://github.com/SamHollings/covid19_analysis/blob/main/covid_data.png?raw=true)
+![four plots of covid data](https://github.com/SamHollings/covid19_analysis/blob/main/graphs/covid_data.png?raw=true)
 
 ## Manifest:
 - **covid_data.py** - this contains functions for extracting data from the NHSE API, Google Mobility and Apple Mobility
 
 ## Examples:
-
+Pulling the data and making the above plot:
 ```
 import covid_data
 
@@ -84,3 +84,35 @@ df_nhsregion_nhse_feed.set_index(['date','name'])[['covidOccupiedMVBeds']].unsta
 df_apple_mobility_report[(df_apple_mobility_report['region'] == 'England')].set_index('date')[['driving','walking','transit']].plot(ax=ax[1][1], title='Apple Mobility England')
 plt.show()
 ```
+Interpolation of the start of any missing data (very simple, just using pandas interpolate "pchip")
+![Interpolated plot of covid data](https://github.com/SamHollings/covid19_analysis/blob/main/graphs/covid_data_interpolated.png?raw=true)
+
+```import matplotlib.pyplot as plt
+import covid_data
+
+query_structure = {"date": "date",
+                   "areatype": "areaType",
+                  "name": "areaName",
+                  "code": "areaCode",
+                  "newAdmissions": "newAdmissions",
+                  "newPillarTwoTestsByPublishDate": "newPillarTwoTestsByPublishDate",
+                  "plannedCapacityByPublishDate" : "plannedCapacityByPublishDate",
+                  "newTestsByPublishDate": "newTestsByPublishDate",
+                  "covidOccupiedMVBeds": "covidOccupiedMVBeds",
+                   "hospitalCases":"hospitalCases",
+                   "newCasesBySpecimenDate":"newCasesBySpecimenDate",
+                   "newCasesByPublishDate":"newCasesByPublishDate",
+                   "cumCasesByPublishDate":"cumCasesByPublishDate",
+                   "newDeaths28DaysByPublishDate":"newDeaths28DaysByPublishDate",
+                   "maleCases":"maleCases",
+                   "femaleCases":"femaleCases"}
+
+# England Only
+df_england_nhse_feed = covid_data.get_paginated_dataset([f"areaType=nation;areaName=england"], query_structure).dropna(how='all',axis=1).sort_values(['code','date',]).reset_index(drop=True)
+
+# interpolate and plot
+fig,ax = plt.subplots(figsize=(10,5))
+for column in ['newAdmissions',	'covidOccupiedMVBeds',	'hospitalCases']:
+ interpolate_early_data(df_england_nhse_feed[column]).rename(column).plot(linestyle='--', color=['blue'], linewidth=1);#.loc[60:100]
+
+df_england_nhse_feed[['newAdmissions',	'covidOccupiedMVBeds',	'hospitalCases']].plot(ax=ax,legend=True, title='hospital cases, new admissions and MV beds')```
