@@ -155,6 +155,15 @@ def interpolate_early_data(series : pd.Series,
     return noisy_interp_data.rename(series.name)
 
               
+def remove_outliers(series, z_score_threshold = 10):
+  """Removes entries from a series which lie more than <threshold> times the standard deviation from the mean. The default should remove more obvious spikes."""
+  import scipy.stats
+  series = swindon_nhse_data.newCasesByPublishDate
+  z_scores = scipy.stats.zscore(series)
+  abs_z_scores = np.abs(z_scores)
+  return series[(abs_z_scores < z_score_threshold)]              
+
+              
 def covid_england_data_blob():
   """Gives you a steaming pile of fresh COVID-19 data from NHSE, Google and Apple"""
   query_structure = {"date": "date",
