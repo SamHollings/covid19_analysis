@@ -11,7 +11,7 @@ import numpy.random as random
 import numpy as np
 
 
-def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dict, str]],
+def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dict, str]] = None,
                           start_page = 1, end_page=None) -> pd.DataFrame:
     """This is lifted from the NHSE website: https://coronavirus.data.gov.uk/developers-guide
     The "filters" param is used to determine what geographical level you will pull,
@@ -71,6 +71,43 @@ def get_paginated_dataset(filters: Iterable[str], structure: Dict[str, Union[dic
         # cumDeaths28DaysByDeathDate - Cumulative deaths within 28 days of positive test by death date
         # cumDeaths28DaysByDeathDateRate - Rate of cumulative deaths within 28 days of positive test by death date per 100k resident population
     """
+    if structure is None:
+      structure = {"date": "date",
+                   "areatype": "areaType",
+                  "name": "areaName",
+                  "code": "areaCode",
+                  'newCasesByPublishDate' : 'newCasesByPublishDate',
+                  'cumCasesByPublishDate' : 'cumCasesByPublishDate',
+                  'cumCasesBySpecimenDateRate' : 'cumCasesBySpecimenDateRate',
+                  'newCasesBySpecimenDate' : 'newCasesBySpecimenDate',
+                  'cumCasesBySpecimenDateRate' : 'cumCasesBySpecimenDateRate',
+                  'cumCasesBySpecimenDate' : 'cumCasesBySpecimenDate',
+                  'maleCases' : 'maleCases',
+                  'femaleCases' : 'femaleCases',
+                  'newPillarOneTestsByPublishDate' : 'newPillarOneTestsByPublishDate',
+                  'cumPillarOneTestsByPublishDate' : 'cumPillarOneTestsByPublishDate',
+                  'newPillarTwoTestsByPublishDate' : 'newPillarTwoTestsByPublishDate',
+                  'cumPillarTwoTestsByPublishDate' : 'cumPillarTwoTestsByPublishDate',
+                  'newPillarThreeTestsByPublishDate' : 'newPillarThreeTestsByPublishDate',
+                  'cumPillarThreeTestsByPublishDate' : 'cumPillarThreeTestsByPublishDate',
+                  'newPillarFourTestsByPublishDate' : 'newPillarFourTestsByPublishDate',
+                  'cumPillarFourTestsByPublishDate' : 'cumPillarFourTestsByPublishDate',
+                  'newAdmissions' : 'newAdmissions',
+                  'cumAdmissions' : 'cumAdmissions',
+                  'cumAdmissionsByAge' : 'cumAdmissionsByAge',
+                  'cumTestsByPublishDate' : 'cumTestsByPublishDate',
+                  'newTestsByPublishDate' : 'newTestsByPublishDate',
+                  'covidOccupiedMVBeds' : 'covidOccupiedMVBeds',
+                  'hospitalCases' : 'hospitalCases',
+                  'plannedCapacityByPublishDate' : 'plannedCapacityByPublishDate',
+                  'newDeaths28DaysByPublishDate' : 'newDeaths28DaysByPublishDate',
+                  'cumDeaths28DaysByPublishDate' : 'cumDeaths28DaysByPublishDate',
+                  'cumDeaths28DaysByPublishDateRate' : 'cumDeaths28DaysByPublishDateRate',
+                  'newDeaths28DaysByDeathDate' : 'newDeaths28DaysByDeathDate',
+                  'cumDeaths28DaysByDeathDate' : 'cumDeaths28DaysByDeathDate',
+                  'cumDeaths28DaysByDeathDateRate' : 'cumDeaths28DaysByDeathDateRate',
+                  }
+    
     endpoint = "https://api.coronavirus.data.gov.uk/v1/data"
     api_params = dict(filters=str.join(";", filters),
                       structure=dumps(structure, separators=(",", ":")), 
