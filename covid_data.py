@@ -7,6 +7,8 @@ import zipfile
 import requests
 import io
 import re
+import scipy
+import scipy.stats
 import numpy.random as random
 import numpy as np
 
@@ -208,7 +210,6 @@ def interpolate_early_data(series : pd.Series,
               
 def remove_outliers(series, z_score_threshold = 10):
   """Removes entries from a series which lie more than <threshold> times the standard deviation from the mean. The default should remove more obvious spikes."""
-  import scipy.stats
   series=series.copy()
 
   z_scores = scipy.stats.zscore(series)
@@ -228,7 +229,6 @@ def remove_outlier_window(series: pd.Series,window_length = 20,window_z_score_th
 
   for idx in series_.index[window_length:]:
     series_window = series[idx-window_length:idx].copy()
-    abs_z_scores = np.abs(scipy.stats.zscore(series_window))
     series_window = remove_outliers(series_window,z_score_threshold=4)
     data_list.append(series_window[window_length-1])
 
