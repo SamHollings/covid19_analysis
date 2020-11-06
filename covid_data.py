@@ -209,12 +209,32 @@ def interpolate_early_data(series : pd.Series,
 def remove_outliers(series, z_score_threshold = 10):
   """Removes entries from a series which lie more than <threshold> times the standard deviation from the mean. The default should remove more obvious spikes."""
   import scipy.stats
-  series = swindon_nhse_data.newCasesByPublishDate
+  series=series.copy()
+
   z_scores = scipy.stats.zscore(series)
   abs_z_scores = np.abs(z_scores)
-  return series[(abs_z_scores < z_score_threshold)]              
 
-              
+  series.loc[abs_z_scores > z_score_threshold] = np.nan
+  return series.interpolate(method='pchip', limit = 1,limit_direction='forward')            
+
+
+def remove_outlier_window(series: pd.Series,window_length = 20,window_z_score_threshold = 4) -> pd.Series:
+  """Removes outliers by scanning a window across the data and removing anything that exceeds the 
+  z_score threshold (replaces that datapoint through interpolation"""
+  series_ = series.copy()
+  series_index = series_.index
+  series_ = series_.reset_index(drop=True)
+  data_list = series_[:window_length].tolist()
+
+  for idx in series_.index[window_length:]:
+    series_window = series[idx-window_length:idx].copy()
+    abs_z_scores = np.abs(scipy.stats.zscore(series_window))
+    series_window = remove_outliers(series_window,z_score_threshold=4)
+    data_list.append(series_window[window_length-1])
+
+  return pd.Series(data_list, index=series_index)
+
+
 def covid_england_data_blob():
   """Gives you a steaming pile of fresh COVID-19 data from NHSE, Google and Apple"""
   query_structure = {"date": "date",
