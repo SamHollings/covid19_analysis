@@ -154,10 +154,24 @@ def google_mobility(country_filter="GB"):
   return df_gb_google_mobility_report
 
 
-def apple_mobility():
+def apple_mobility() -> pd.DataFrame:
   """Pulls data from the apple mobility report website https://covid19.apple.com/mobility
+  It keeps trying dates going back from the most recent to 100 days before today 
+  searching for the most recent file. Once it finds a file it gives you that as a dataframe
   """
-  df_apple_mobility_report = pd.read_csv("https://covid19-static.cdn-apple.com/covid19-mobility-data/2019HotfixDev25/v3/en-us/applemobilitytrends-2020-10-30.csv")
+  import datetime
+  df_apple_mobility_report = None
+  for date in pd.date_range(datetime.date.today() - pd.Timedelta(days=100),datetime.date.today(),freq='D')[::-1]:
+    date_str = date.strftime("%Y-%m-%d")
+    try:
+      df_apple_mobility_report = pd.read_csv(f"https://covid19-static.cdn-apple.com/covid19-mobility-data/2019HotfixDev30/v3/en-us/applemobilitytrends-{date_str}.csv")
+      break
+    except Exception as error:
+      pass
+
+  if df_apple_mobility_report is None:
+    print("Couldn't find the apple mobility data")
+
   return df_apple_mobility_report
 
 
