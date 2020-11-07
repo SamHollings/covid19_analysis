@@ -5,6 +5,7 @@ Tools for NHS-related COVID-19 data analysis. Image below from NHSE&I feed (func
 
 ## Manifest:
 - **covid_data.py** - this contains functions for extracting data from the NHSE API, Google Mobility and Apple Mobility
+- **data_tools.py** - functions for manipulating dataframes
 
 ## Examples:
 Pulling the data and making the above plot:
