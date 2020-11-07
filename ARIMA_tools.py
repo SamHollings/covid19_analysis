@@ -6,19 +6,30 @@ import numpy as np
 import pandas as pd
 
 
-def get_forecasts(model_fit, exog=None, number_past_the_end=10):
-  """Get the forecasts of a SARIMAX model"""
-  forecast = model_fit.get_forecast(steps=number_past_the_end, exog=exog)
-  conf_int = forecast.conf_int()
-  return pd.DataFrame(dict(mean_forecast = forecast.predicted_mean.values,
-                           upper_forecast = conf_int.iloc[:,1].values,
-                           lower_forecast = conf_int.iloc[:,0].values),
-                      index=forecast.row_labels
-                      )
+# def get_forecasts(model_fit, exog=None, number_past_the_end=10):
+#   """Get the forecasts of a SARIMAX model"""
+#   forecast = model_fit.get_forecast(steps=number_past_the_end, exog=exog)
+#   conf_int = forecast.conf_int()
+#   return pd.DataFrame(dict(mean_forecast = forecast.predicted_mean.values,
+#                            upper_forecast = conf_int.iloc[:,1].values,
+#                            lower_forecast = conf_int.iloc[:,0].values),
+#                       index=forecast.row_labels
+#                       )
+
+
+def plot_arima_predictions(predict, label='prediction', ci_label='confidence', ci_alpha=0.3, pred_linestyle='--',
+                         pred_color=None, ax=None, ) -> pd.DataFrame:
+    """Plot the predictions with confidence intervals"""
+    predict_ci = predict.conf_int()
+    predict.predicted_mean.plot(ax=ax, label=label, linestyle=pred_linestyle, color=pred_color)
+    plot_tools.plot_ci(predict_ci, label=ci_label, ax=ax, alpha=ci_alpha)
+    return pd.concat([predict.predicted_mean, predict_ci],axis=1)
 
 
 def SARIMAX_model(df_data : pd.DataFrame, endog_name, exog_name, order=(30, 1, 10), plot_diagnostics=False, fit_summary=False):
-    df_actual = df_data[df_data['type'] == 'actual'].copy().dropna(how='any')
+    """A toy function to run a SARIMAX model on the supplied data. Must be supplied with a column called 'type' which
+    has values 'forecast" and 'actual' to describe the historic and forecast sections of the data"""
+    df_actual = df_data[df_data['type'] == 'actual'].copy()[[endog_name,exog_name]].dropna(how='any')
     endogenous_actual = df_actual[endog_name]
     exogenous_actual = df_actual[exog_name]
     exogenous_forecast = df_data[df_data['type'] == 'forecast'].copy()[exog_name]
@@ -35,29 +46,14 @@ def SARIMAX_model(df_data : pd.DataFrame, endog_name, exog_name, order=(30, 1, 1
 
     # make the "in-sample" predictions - I.e. a sort of 1 day backfit
     predict = model_fit.get_prediction()
-    predict_ci = predict.conf_int()
-    # make the "out-of-sample" predictions - I.e. the future predictions
-    df_forecast = get_forecasts(model_fit, exog=np.atleast_2d(exogenous_forecast).T,
-                                number_past_the_end=len(exogenous_forecast))
+    # make the "out-of-sample" predictions - I.e. the future predictions]
+    forecast = model_fit.get_forecast(exog=np.atleast_2d(exogenous_forecast).T, steps=len(exogenous_forecast))
 
+    # plot the results
     fig, ax = plt.subplots(figsize=(15, 7))
-    predict.predicted_mean.plot(color='red',ax=ax)
-    # plt.fill_between(predict_ci.index, predict_ci[f'lower {endog_name}]'], predict_ci[f'upper {endog_name}'],
-    #                  alpha=0.5)
-    plot_tools.plot_ci(predict_ci[[f'lower {endog_name}]', f'upper {endog_name}']], label='insample confidence', ax=ax)
-    df_forecast['mean_forecast'].plot(ax=ax)
-    plt.fill_between(df_forecast.index, df_forecast['lower_forecast'], df_forecast['upper_forecast'], alpha=0.5)
-    ax.set_ylim(-70, )
-
-    fig, ax = plt.subplots(figsize=(15, 7))
-    # plot actuals
-    df_data['covidOccupiedMVBeds'].plot(ax=ax, marker='x', linewidth=0)
-    # plot in sample forecasts
-    predict.predicted_mean.plot(color='red', ax=ax, label='insample forecast', linestyle='--')
-    plot_tools.plot_ci(predict_ci[[f'lower {endog_name}]', f'upper {endog_name}']], label='confidence', ax=ax,alpha=0.3)
-    # plot out of sample forecasts
-    df_forecast['mean_forecast'].rename('out-of-sample forecast').plot(ax=ax, linestyle='--')
-    plot_tools.plot_ci(df_forecast[['lower_forecast', 'upper_forecast']], label=None, ax=ax, alpha=0.3)
+    df_data[endog_name].plot(ax=ax, marker='x', linewidth=0)  # actual data measured
+    plot_arima_predictions(predict, label='insample forecast')  # in sample forecast - the fit of the model the data
+    plot_arima_predictions(forecast, label='out-of-sample forecast',ci_label=None)  # out-of-sample-forecast - the forecast of the future
     ax.set_ylim(-70, )
     plt.legend()
 
