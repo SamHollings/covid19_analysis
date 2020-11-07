@@ -1,11 +1,13 @@
 # covid19_analysis
 Tools for NHS-related COVID-19 data analysis. Image below from NHSE&I feed (functions below):
-
+![ARIMA plot of mechanically ventilated beds in england](https://github.com/SamHollings/covid19_analysis/blob/main/graphs/ARIMA_mv_beds_england.png?raw=true)
 ![four plots of covid data](https://github.com/SamHollings/covid19_analysis/blob/main/graphs/covid_data.png?raw=true)
 
 ## Manifest:
 - **covid_data.py** - this contains functions for extracting data from the NHSE API, Google Mobility and Apple Mobility
 - **data_tools.py** - functions for manipulating dataframes
+- **ARIMA_tools.py** - functions to help with ARIMA modelling
+- **plot_tools.py** - functions to help make plots
 
 ## Examples:
 Pulling the data and making the above plot:
