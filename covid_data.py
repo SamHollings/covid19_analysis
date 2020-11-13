@@ -264,7 +264,7 @@ def nhse_monthly_covid19_admissions_historic_excel(url="https://www.england.nhs.
     .dropna(how='all',axis=1).dropna(how='all',axis=0)
     .set_index(['NHS England Region', 'Code', 'Name']).rename_axis('date',axis=1).stack().rename(sheet)) for sheet in Excel_nhse_covid_trust_historic.sheet_names[1:]]).T
 
-    filename = (weekly_admissions_url[-(weekly_admissions_url[::-1].find("/")):]).replace("xlsx","csv")
+    filename = (url[-(url[::-1].find("/")):]).replace("xlsx","csv")
     output_df.to_csv(filename)
     return output_df
 
