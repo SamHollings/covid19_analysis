@@ -235,6 +235,40 @@ def remove_outlier_window(series: pd.Series,window_length = 20,window_z_score_th
   return pd.Series(data_list, index=series_index)
 
 
+def nhse_weekly_covid19_admissions_excel(weekly_admissions_url = "https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2020/10/Weekly-covid-admissions-publication-201029-2.xlsx"):
+    """Pulls the weekly NHSE COVID19 Trust admissions file - useful as it is at a trust level and more recent than the
+    monthly one, however it only goes back a few monhts.. It combines the different sheets into a single dataframe.
+    Taken from the below URL:
+    https://www.england.nhs.uk/statistics/statistical-work-areas/covid-19-hospital-activity/"""
+    df_nhse_weekly_covid19_admissions = pd.DataFrame([pd.read_excel(weekly_admissions_url, sheet_name = sheet,header=14).dropna(how="all",axis=1).dropna(how="all",axis=0)
+                                                                                  .set_index(['NHS England Region', 'Code', 'Name']).rename_axis('date',axis=1).stack().rename(sheet)
+                                                                    for sheet in ['Hosp ads & diag',
+                                                                                  'New hosp cases',
+                                                                                  'Hosp ads from comm',
+                                                                                  'Hosp ads from comm with lag',
+                                                                                  'Care home ads and diags',
+                                                                                  'All beds COVID','MV beds COVID']]).T
+    filename = (weekly_admissions_url[-(weekly_admissions_url[::-1].find("/")):]).replace("xlsx","csv")
+    df_nhse_weekly_covid19_admissions.to_csv(filename)
+    return df_nhse_weekly_covid19_admissions
+
+
+def nhse_monthly_covid19_admissions_historic_excel(url="https://www.england.nhs.uk/statistics/wp-content/uploads/sites/2/2020/11/Covid-Publication-12-11-2020_v4-CB.xlsx"):
+    """Pulls the monthly NHSE COVID19 Trust admissions file - useful as it is at a trust level and covers the full
+    history , however it doesn't contain the most recent weeks. It combines the different sheets into a single
+    dataframe. Taken from the below URL:
+    https://www.england.nhs.uk/statistics/statistical-work-areas/covid-19-hospital-activity/"""
+    Excel_nhse_covid_trust_historic = pd.ExcelFile(url)
+    output_df =  pd.DataFrame([(Excel_nhse_covid_trust_historic.parse(sheet,header=12)
+    .drop(columns='NHS England Region').rename(columns={"Unnamed: 2":"NHS England Region"})
+    .dropna(how='all',axis=1).dropna(how='all',axis=0)
+    .set_index(['NHS England Region', 'Code', 'Name']).rename_axis('date',axis=1).stack().rename(sheet)) for sheet in Excel_nhse_covid_trust_historic.sheet_names[1:]]).T
+
+    filename = (weekly_admissions_url[-(weekly_admissions_url[::-1].find("/")):]).replace("xlsx","csv")
+    output_df.to_csv(filename)
+    return output_df
+
+
 def covid_england_data_blob(utla=True, ltla=True) -> dict:
     """Gives you a steaming pile of fresh COVID-19 data from NHSE, Google and Apple"""
     # use default query structure - which I've set above to mean EVERYTHING
