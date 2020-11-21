@@ -166,7 +166,7 @@ def apple_mobility() -> pd.DataFrame:
   for date in pd.date_range(datetime.date.today() - pd.Timedelta(days=100),datetime.date.today(),freq='D')[::-1]:
     date_str = date.strftime("%Y-%m-%d")
     try:
-      df_apple_mobility_report = pd.read_csv(f"https://covid19-static.cdn-apple.com/covid19-mobility-data/2019HotfixDev30/v3/en-us/applemobilitytrends-{date_str}.csv")
+      df_apple_mobility_report = pd.read_csv(f"https://covid19-static.cdn-apple.com/covid19-mobility-data/2021HotfixDev19/v3/en-us/applemobilitytrends-{date_str}.csv")
       break
     except Exception as error:
       pass
