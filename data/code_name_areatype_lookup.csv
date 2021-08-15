@@ -1,0 +1,19 @@
+code,name,areatype
+E92000001,England,nation
+K02000001,United Kingdom,overview
+E40000003,London,nhsRegion
+E40000005,South East,nhsRegion
+E40000006,South West,nhsRegion
+E40000007,East of England,nhsRegion
+E40000008,Midlands,nhsRegion
+E40000009,North East and Yorkshire,nhsRegion
+E40000010,North West,nhsRegion
+E12000001,North East,region
+E12000002,North West,region
+E12000003,Yorkshire and The Humber,region
+E12000004,East Midlands,region
+E12000005,West Midlands,region
+E12000006,East of England,region
+E12000007,London,region
+E12000008,South East,region
+E12000009,South West,region

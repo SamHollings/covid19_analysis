@@ -219,7 +219,7 @@ def remove_outliers(series, z_score_threshold = 10):
   return series.interpolate(method='pchip', limit = 1,limit_direction='forward')            
 
 
-def remove_outlier_window(series: pd.Series,window_length = 20,window_z_score_threshold = 4) -> pd.Series:
+def remove_outlier_window(series: pd.Series,window_length=20, window_z_score_threshold=4) -> pd.Series:
   """Removes outliers by scanning a window across the data and removing anything that exceeds the 
   z_score threshold (replaces that datapoint through interpolation"""
   series_ = series.copy()
@@ -229,7 +229,7 @@ def remove_outlier_window(series: pd.Series,window_length = 20,window_z_score_th
 
   for idx in series_.index[window_length:]:
     series_window = series[idx-window_length:idx].copy()
-    series_window = remove_outliers(series_window,z_score_threshold=4)
+    series_window = remove_outliers(series_window,z_score_threshold=window_z_score_threshold)
     data_list.append(series_window[window_length-1])
 
   return pd.Series(data_list, index=series_index)
@@ -270,7 +270,10 @@ def nhse_monthly_covid19_admissions_historic_excel(url="https://www.england.nhs.
 
 
 def covid_england_data_blob(utla=True, ltla=True) -> dict:
-    """Gives you a steaming pile of fresh COVID-19 data from NHSE, Google and Apple"""
+    """Gives you a steaming pile of fresh COVID-19 data from NHSE, Google and Apple
+    ToDo: Need to change this to be a class with methods really.
+
+    """
     # use default query structure - which I've set above to mean EVERYTHING
 
     output = dict()
@@ -322,13 +325,50 @@ def covid_england_data_blob(utla=True, ltla=True) -> dict:
 
     # google and apple mobility
     output['google_mobility'] = google_mobility().sort_values(["country_region_code","sub_region_1",'date']).reset_index(drop=True)
-    output['apple_mobility'] = (apple_mobility().set_index(['geo_type','region','transportation_type','alternative_name','sub-region','country'])
-                                                        .rename_axis('date',axis=1).stack()
-                                                        .unstack('transportation_type').reset_index())
-    output['apple_mobility'] = output['apple_mobility'][(output['apple_mobility'].country == "United Kingdom") &
-                                                      ((output['apple_mobility']['region'] == 'England')
-                                                      | (output['apple_mobility']['sub-region'] == 'England')
-                                                      )]
+    # output['apple_mobility'] = (apple_mobility().set_index(['geo_type','region','transportation_type','alternative_name','sub-region','country'])
+    #                                                     .rename_axis('date',axis=1).stack()
+    #                                                     .unstack('transportation_type').reset_index())
+    # output['apple_mobility'] = output['apple_mobility'][(output['apple_mobility'].country == "United Kingdom") &
+    #                                                   ((output['apple_mobility']['region'] == 'England')
+    #                                                   | (output['apple_mobility']['sub-region'] == 'England')
+    #                                                   )]
 
     return output
 
+
+if __name__ == '__main__':
+    # pull the data
+    covid_data_blob = covid_england_data_blob(utla=True, ltla=False)
+
+    # Massage the data into a dataframe, so we can make the date column "datetime" type, and then set an index to be the `areatype`, `date` and `name`.
+    # I also made a lookup dataframe between `name`, `areatype` and `code` and removed the scottish, welsh and NI entries
+
+    output_dataframes = dict()
+
+    # bring all of the data into one dataframe as I'm lazy and it maks some of the processing easier (only have to write it once)
+    # ToDo: Make a preprocess function to make Date a date-type, and to remove scottish and wlesh records.
+    df_nhs_api_data = pd.concat(list(covid_data_blob.values())[:-2], sort=True)
+    # reformat the date column as a date-type
+    df_nhs_api_data = df_nhs_api_data.assign(
+        date=pd.to_datetime(df_nhs_api_data['date'], format="%Y-%m-%d", errors='coerce')).set_index(
+        ['areatype', 'date', 'name'])
+
+    df_nhs_api_data = df_nhs_api_data[~df_nhs_api_data.code.str.contains("[WSN]")].query(
+        "code != 'null'")  # remove all scottish welsh and NI records and code IS NULL records
+
+    output_dataframes['code_name_areatype_lookup'] = df_nhs_api_data.reset_index()[['code', 'name', 'areatype']
+                                                                                  ].drop_duplicates().set_index('code')  # reference data
+
+    output_dataframes['england_nhse_feed'] = df_nhs_api_data.loc['nation',:]
+    output_dataframes['uk_wide_nhse_feed'] = df_nhs_api_data.loc['overview',:]
+    output_dataframes['nhsregion_nhse_feed'] = df_nhs_api_data.loc['nhsRegion',:]
+    output_dataframes['region_nhse_feed'] = df_nhs_api_data.loc['region',:]
+
+    # output_dataframes['utla_nhse_feed'] = df_nhs_api_data.loc['utla',:]  # covid_data_blob['utla_nhse'].set_index(['date','name']).drop(columns=['areatype','code'])
+    # df_ltla_nhse_feed = df_nhs_api_data.loc['ltla',:]
+
+    output_dataframes['gb_google_mobility_report'] = covid_data_blob['google_mobility']
+
+    # now go down the output dataframes, and write to files
+    for filename, data_dataframe in output_dataframes.items():
+        data_dataframe.to_csv(f"./data/{filename}.csv")
