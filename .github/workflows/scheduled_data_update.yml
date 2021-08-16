@@ -1,3 +1,4 @@
+
 name: Download latest Covid data and update the files in the repo
 
 on:
