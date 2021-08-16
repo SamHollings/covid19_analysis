@@ -338,16 +338,18 @@ def covid_england_data_blob(utla=True, ltla=True) -> dict:
 
 if __name__ == '__main__':
     # pull the data
-    covid_data_blob = covid_england_data_blob(utla=True, ltla=False)
+    covid_data_blob = covid_england_data_blob(utla=True, ltla=True)
 
     # Massage the data into a dataframe, so we can make the date column "datetime" type, and then set an index to be the `areatype`, `date` and `name`.
     # I also made a lookup dataframe between `name`, `areatype` and `code` and removed the scottish, welsh and NI entries
 
     output_dataframes = dict()
 
+    output_dataframes['gb_google_mobility_report'] = covid_data_blob.pop('google_mobility')
+
     # bring all of the data into one dataframe as I'm lazy and it maks some of the processing easier (only have to write it once)
     # ToDo: Make a preprocess function to make Date a date-type, and to remove scottish and wlesh records.
-    df_nhs_api_data = pd.concat(list(covid_data_blob.values())[:-2], sort=True)
+    df_nhs_api_data = pd.concat(list(covid_data_blob.values()), sort=True)
     # reformat the date column as a date-type
     df_nhs_api_data = df_nhs_api_data.assign(
         date=pd.to_datetime(df_nhs_api_data['date'], format="%Y-%m-%d", errors='coerce')).set_index(
@@ -363,11 +365,10 @@ if __name__ == '__main__':
     output_dataframes['uk_wide_nhse_feed'] = df_nhs_api_data.loc['overview',:]
     output_dataframes['nhsregion_nhse_feed'] = df_nhs_api_data.loc['nhsRegion',:]
     output_dataframes['region_nhse_feed'] = df_nhs_api_data.loc['region',:]
+    output_dataframes['utla_nhse_feed'] = df_nhs_api_data.loc['utla',:]
+    output_dataframes['ltla_nhse_feed'] = df_nhs_api_data.loc['ltla',:]
 
-    # output_dataframes['utla_nhse_feed'] = df_nhs_api_data.loc['utla',:]  # covid_data_blob['utla_nhse'].set_index(['date','name']).drop(columns=['areatype','code'])
-    # df_ltla_nhse_feed = df_nhs_api_data.loc['ltla',:]
 
-    output_dataframes['gb_google_mobility_report'] = covid_data_blob['google_mobility']
 
     # now go down the output dataframes, and write to files
     for filename, data_dataframe in output_dataframes.items():
