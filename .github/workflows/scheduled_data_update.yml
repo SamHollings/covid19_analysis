@@ -2,8 +2,8 @@
 name: Download latest Covid data and update the files in the repo
 
 on:
-  schedule: # run lunchtime Monday
-    - cron: "0 12 * * 1"
+  schedule: # run lunchtime every day
+    - cron: "0 12 * * *"
 
 jobs:
   build-linux:
