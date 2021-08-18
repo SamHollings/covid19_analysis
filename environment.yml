@@ -6,5 +6,11 @@ dependencies:
   - pandas
   - requests
   - matplotlib
+  - plotly
   - statsmodels
   - jupyter
+  - streamlit
+  - geopandas
+  - pip
+  - pip:
+    - uk-covid19 # the PHE library for pulling from the PHE/NHSE covid-19 api API
