@@ -4,6 +4,7 @@ import numpy as np
 import covid_data
 import streamlit as st
 import plotly.express as px
+import geopandas as gpd
 
 data_pack = covid_data.get_data()
 
@@ -33,9 +34,9 @@ st.write(fig_region_cases)
 
 st.write("### simple map")
 
-import geopandas as gpd
-
 df_local_auth_shapes = gpd.read_file('./shapefiles/Local_Authority_Districts_(December_2020)_UK_BGC.geojson').set_index('LAD20CD')
+
+# ToDo: bring in ltla figures to plot on the map.
 
 fig_regions_scaled_cases_map = px.choropleth(df_local_auth_shapes,
               geojson=df_local_auth_shapes.geometry,
