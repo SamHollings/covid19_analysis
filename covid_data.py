@@ -6,6 +6,7 @@ import pandas as pd
 import zipfile
 import requests
 import io
+import os
 import re
 import scipy
 import scipy.stats
@@ -341,8 +342,8 @@ def clean_data(df_nhs_api_data):
         date=pd.to_datetime(df_nhs_api_data['date'], format="%Y-%m-%d", errors='coerce')).set_index(
         ['areatype', 'date', 'name'])
 
-    df_nhs_api_data = df_nhs_api_data[~df_nhs_api_data.code.str.contains("[WSN]")].query(
-        "code != 'null'")  # remove all scottish welsh and NI records and code IS NULL records
+    df_nhs_api_data = df_nhs_api_data[~df_nhs_api_data['code'].str.contains("[WSN]")]
+    df_nhs_api_data = df_nhs_api_data.query("code != 'null'")  # remove all scottish welsh and NI records and code IS NULL records
 
     return df_nhs_api_data
 
@@ -351,57 +352,29 @@ def download_and_save_data():
     """"""
     data_directory = './data'
     covid_data_blob = covid_england_data_blob(utla=True, ltla=True)
+
+    # deal with google mobility data
+    df_dataset = covid_data_blob.pop('google_mobility')
+    df_dataset.to_csv(f"{data_directory}/gb_google_mobility_report.csv")
+
+    # save the nhse API data
     for dataset_name, df_dataset in covid_data_blob.items():
-        if dataset_name == 'google_mobility':
-            df_dataset.to_csv(f"{data_directory}/gb_google_mobility_report.csv")
-        else:
-            clean_data(df_dataset).to_csv(f"{data_directory}/{dataset_name}.csv")
+        clean_data(df_dataset).to_csv(f"{data_directory}/{dataset_name}_feed.csv")
 
     # make lookup # ToDo: eventually get this lookup from a more authorative source, like GeoPortal
     df_nhs_api_data = pd.concat(list(covid_data_blob.values()), sort=True)
     df_lookup = clean_data(df_nhs_api_data).reset_index()[['code', 'name', 'areatype']].drop_duplicates().set_index('code')  # reference data
-    df_lookup.to_csv(f"{data_directory}/code_name_areatype_lookup")
+    df_lookup.to_csv(f"{data_directory}/code_name_areatype_lookup.csv")
 
-def get_data():
-    return
+def get_data(data_dir = './data'):
+    """Trawls the data_dir and returns a dictionary with each of the files loaded as pandas dataframes"""
+    files_list = os.listdir(data_dir)
+    data_pack = dict()
+    for file_name in files_list:
+        file_name_without_extension = file_name.rsplit(".",1)[0]
+        data_pack[file_name_without_extension] = pd.read_csv(f"{data_dir}/{file_name}")
+    return data_pack
 
 
 if __name__ == '__main__':
     download_and_save_data()
-    #
-    # # pull the data
-    # covid_data_blob = covid_england_data_blob(utla=True, ltla=True)
-    #
-    # # Massage the data into a dataframe, so we can make the date column "datetime" type, and then set an index to be the `areatype`, `date` and `name`.
-    # # I also made a lookup dataframe between `name`, `areatype` and `code` and removed the scottish, welsh and NI entries
-    #
-    # output_dataframes = dict()
-    #
-    # output_dataframes['gb_google_mobility_report'] = covid_data_blob.pop('google_mobility')
-    #
-    # # bring all of the data into one dataframe as I'm lazy and it maks some of the processing easier (only have to write it once)
-    # # ToDo: Make a preprocess function to make Date a date-type, and to remove scottish and wlesh records.
-    # df_nhs_api_data = pd.concat(list(covid_data_blob.values()), sort=True)
-    # # reformat the date column as a date-type
-    # df_nhs_api_data = df_nhs_api_data.assign(
-    #     date=pd.to_datetime(df_nhs_api_data['date'], format="%Y-%m-%d", errors='coerce')).set_index(
-    #     ['areatype', 'date', 'name'])
-    #
-    # df_nhs_api_data = df_nhs_api_data[~df_nhs_api_data.code.str.contains("[WSN]")].query(
-    #     "code != 'null'")  # remove all scottish welsh and NI records and code IS NULL records
-    #
-    # output_dataframes['code_name_areatype_lookup'] = df_nhs_api_data.reset_index()[['code', 'name', 'areatype']
-    #                                                                               ].drop_duplicates().set_index('code')  # reference data
-    #
-    # output_dataframes['england_nhse_feed'] = df_nhs_api_data.loc['nation',:]
-    # output_dataframes['uk_wide_nhse_feed'] = df_nhs_api_data.loc['overview',:]
-    # output_dataframes['nhsregion_nhse_feed'] = df_nhs_api_data.loc['nhsRegion',:]
-    # output_dataframes['region_nhse_feed'] = df_nhs_api_data.loc['region',:]
-    # output_dataframes['utla_nhse_feed'] = df_nhs_api_data.loc['utla',:]
-    # output_dataframes['ltla_nhse_feed'] = df_nhs_api_data.loc['ltla',:]
-    #
-    #
-    #
-    # # now go down the output dataframes, and write to files
-    # for filename, data_dataframe in output_dataframes.items():
-    #     data_dataframe.to_csv(f"./data/{filename}.csv")
