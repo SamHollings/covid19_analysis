@@ -1,0 +1,8 @@
+# this yml is just used during the data download
+name: covid_data_download
+dependencies:
+  - python=3.7
+  - numpy
+  - scipy
+  - pandas
+  - requests
