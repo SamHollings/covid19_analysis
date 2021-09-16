@@ -22,7 +22,7 @@ def initialise_spark():
     return spark
 
 
-class getData:
+class DataStore:
     """this class acts as a middle man between the ETL processes and wherever the data is being stored.
     Iniially this will just be locally in CSV files"""
     def __init__(self, source='local', data_format='csv', spark_session=initialise_spark()):
@@ -30,11 +30,19 @@ class getData:
         self.format = data_format
         self.spark = spark_session
 
-    def table(self, table_name):
+    def get_table(self, table_name):
         """Extract the 'table_name' data from the 'source' (where it is stored in the specified 'format'"""
         if self.source=='local' and self.format == 'csv':
-            pdf_table = pd.read_csv(table_name)
-            sdf_table = self.spark.createDataFrame(pdf_table)
+            #pdf_table = pd.read_csv(table_name)
+            #sdf_table = self.spark.createDataFrame(pdf_table)
+            sdf_table = self.spark.read.load(table_name, format='csv', sep=',', inferSchema='true',header='true')
 
         return sdf_table
+
+    def save_table(self, sdf, table_name):
+        """save the 'table_name' to the 'source' in the specified 'format'"""
+        if self.source=='local' and self.format == 'csv':
+            # Need to take a dataframe and save it in the required format or whatever.
+            #sdf.repartition(1).write.csv(table_name) # struggling to get this to work
+            sdf.toPandas().to_csv(table_name, index=False, sep=',')
 

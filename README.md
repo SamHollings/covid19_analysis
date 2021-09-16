@@ -3,6 +3,22 @@ Tools for NHS-related COVID-19 data analysis. Image below from NHSE&I feed (func
 ![ARIMA plot of mechanically ventilated beds in england](https://github.com/SamHollings/covid19_analysis/blob/main/graphs/ARIMA_mv_beds_england.png?raw=true)
 ![four plots of covid data](https://github.com/SamHollings/covid19_analysis/blob/main/graphs/covid_data.png?raw=true)
 
+## ToDo:
+- **productionise ETL processes to pull data**
+  - make functions (which should be tested)
+    - going to need standard input output functions to read\write from which ever technology I choose into pyspark
+    - then I can mostly code everything in pyspark
+  - make triggers which can activate these
+  - designate a warehouse into which this stuff goes.
+- **begin construction of a feature store**
+  - currently the processed data is all over the place
+  - instead need to organise it into spark functions, which act as features against some entity (i.e. geographical region at a point in time)
+  - then make "feature process" ETLs to pull from the warehouse and deposit this feature in the feature store
+- **productionise front end code / data science code**
+  - once the features are arranged better in the feature store, any front end should just scoop them up and display them, run models, etc.
+- **look at integrating AWS into all of the above**
+
+
 ## Manifest:
 - **covid_data.py** - this contains functions for extracting data from the NHSE API, Google Mobility and Apple Mobility
 - **data_tools.py** - functions for manipulating dataframes
