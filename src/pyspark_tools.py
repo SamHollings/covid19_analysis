@@ -22,7 +22,7 @@ def initialise_spark():
     return spark
 
 
-class DataStore:
+class DataStore(object):
     """this class acts as a middle man between the ETL processes and wherever the data is being stored.
     Iniially this will just be locally in CSV files"""
     def __init__(self, source='local', data_format='csv', spark_session=initialise_spark()):
