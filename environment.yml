@@ -13,6 +13,7 @@ dependencies:
   - jupyter
   - streamlit
   - geopandas
+  - pyspark
   - pip
   - pip:
     - uk-covid19 # the PHE library for pulling from the PHE/NHSE covid-19 api API
