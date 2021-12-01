@@ -200,7 +200,6 @@ E06000033,Southend-on-Sea,ltla
 E06000034,Thurrock,ltla
 E06000035,Medway,ltla
 E06000036,Bracknell Forest,ltla
-E06000037,West Berkshire,ltla
 E06000038,Reading,ltla
 E06000039,Slough,ltla
 E06000040,Windsor and Maidenhead,ltla
@@ -235,7 +234,6 @@ E07000027,Barrow-in-Furness,ltla
 E07000028,Carlisle,ltla
 E07000029,Copeland,ltla
 E07000030,Eden,ltla
-E07000031,South Lakeland,ltla
 E07000032,Amber Valley,ltla
 E07000033,Bolsover,ltla
 E07000034,Chesterfield,ltla
@@ -271,14 +269,12 @@ E07000076,Tendring,ltla
 E07000077,Uttlesford,ltla
 E07000078,Cheltenham,ltla
 E07000079,Cotswold,ltla
-E07000080,Forest of Dean,ltla
 E07000081,Gloucester,ltla
 E07000082,Stroud,ltla
 E07000083,Tewkesbury,ltla
 E07000084,Basingstoke and Deane,ltla
 E07000085,East Hampshire,ltla
 E07000086,Eastleigh,ltla
-E07000087,Fareham,ltla
 E07000088,Gosport,ltla
 E07000089,Hart,ltla
 E07000090,Havant,ltla
@@ -373,15 +369,12 @@ E07000195,Newcastle-under-Lyme,ltla
 E07000196,South Staffordshire,ltla
 E07000197,Stafford,ltla
 E07000198,Staffordshire Moorlands,ltla
-E07000199,Tamworth,ltla
 E07000200,Babergh,ltla
 E07000202,Ipswich,ltla
 E07000203,Mid Suffolk,ltla
 E07000207,Elmbridge,ltla
 E07000208,Epsom and Ewell,ltla
-E07000209,Guildford,ltla
 E07000210,Mole Valley,ltla
-E07000211,Reigate and Banstead,ltla
 E07000212,Runnymede,ltla
 E07000213,Spelthorne,ltla
 E07000214,Surrey Heath,ltla
@@ -391,7 +384,6 @@ E07000217,Woking,ltla
 E07000218,North Warwickshire,ltla
 E07000219,Nuneaton and Bedworth,ltla
 E07000220,Rugby,ltla
-E07000221,Stratford-on-Avon,ltla
 E07000222,Warwick,ltla
 E07000223,Adur,ltla
 E07000224,Arun,ltla
@@ -414,7 +406,6 @@ E07000244,East Suffolk,ltla
 E07000245,West Suffolk,ltla
 E07000246,Somerset West and Taunton,ltla
 E08000001,Bolton,ltla
-E08000002,Bury,ltla
 E08000003,Manchester,ltla
 E08000004,Oldham,ltla
 E08000005,Rochdale,ltla
@@ -461,9 +452,7 @@ E09000010,Enfield,ltla
 E09000011,Greenwich,ltla
 E09000012,Hackney and City of London,ltla
 E09000013,Hammersmith and Fulham,ltla
-E09000014,Haringey,ltla
 E09000015,Harrow,ltla
-E09000016,Havering,ltla
 E09000017,Hillingdon,ltla
 E09000018,Hounslow,ltla
 E09000019,Islington,ltla
