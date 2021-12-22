@@ -173,13 +173,11 @@ E06000004,Stockton-on-Tees,ltla
 E06000005,Darlington,ltla
 E06000006,Halton,ltla
 E06000007,Warrington,ltla
-E06000008,Blackburn with Darwen,ltla
 E06000009,Blackpool,ltla
 E06000010,"Kingston upon Hull, City of",ltla
 E06000011,East Riding of Yorkshire,ltla
 E06000012,North East Lincolnshire,ltla
 E06000013,North Lincolnshire,ltla
-E06000014,York,ltla
 E06000015,Derby,ltla
 E06000016,Leicester,ltla
 E06000017,Rutland,ltla
@@ -197,7 +195,6 @@ E06000030,Swindon,ltla
 E06000031,Peterborough,ltla
 E06000032,Luton,ltla
 E06000033,Southend-on-Sea,ltla
-E06000034,Thurrock,ltla
 E06000035,Medway,ltla
 E06000036,Bracknell Forest,ltla
 E06000037,West Berkshire,ltla
@@ -205,13 +202,11 @@ E06000038,Reading,ltla
 E06000039,Slough,ltla
 E06000040,Windsor and Maidenhead,ltla
 E06000041,Wokingham,ltla
-E06000042,Milton Keynes,ltla
 E06000043,Brighton and Hove,ltla
 E06000044,Portsmouth,ltla
 E06000045,Southampton,ltla
 E06000046,Isle of Wight,ltla
 E06000047,County Durham,ltla
-E06000049,Cheshire East,ltla
 E06000050,Cheshire West and Chester,ltla
 E06000051,Shropshire,ltla
 E06000052,Cornwall and Isles of Scilly,ltla
@@ -248,7 +243,6 @@ E07000040,East Devon,ltla
 E07000041,Exeter,ltla
 E07000042,Mid Devon,ltla
 E07000043,North Devon,ltla
-E07000044,South Hams,ltla
 E07000045,Teignbridge,ltla
 E07000046,Torridge,ltla
 E07000047,West Devon,ltla
@@ -274,9 +268,7 @@ E07000079,Cotswold,ltla
 E07000080,Forest of Dean,ltla
 E07000081,Gloucester,ltla
 E07000082,Stroud,ltla
-E07000083,Tewkesbury,ltla
 E07000084,Basingstoke and Deane,ltla
-E07000085,East Hampshire,ltla
 E07000086,Eastleigh,ltla
 E07000087,Fareham,ltla
 E07000088,Gosport,ltla
@@ -314,7 +306,6 @@ E07000123,Preston,ltla
 E07000124,Ribble Valley,ltla
 E07000125,Rossendale,ltla
 E07000126,South Ribble,ltla
-E07000127,West Lancashire,ltla
 E07000128,Wyre,ltla
 E07000129,Blaby,ltla
 E07000130,Charnwood,ltla
@@ -330,11 +321,9 @@ E07000139,North Kesteven,ltla
 E07000140,South Holland,ltla
 E07000141,South Kesteven,ltla
 E07000142,West Lindsey,ltla
-E07000143,Breckland,ltla
 E07000144,Broadland,ltla
 E07000145,Great Yarmouth,ltla
 E07000146,King's Lynn and West Norfolk,ltla
-E07000147,North Norfolk,ltla
 E07000148,Norwich,ltla
 E07000149,South Norfolk,ltla
 E07000150,Corby,ltla
@@ -343,7 +332,6 @@ E07000152,East Northamptonshire,ltla
 E07000153,Kettering,ltla
 E07000154,Northampton,ltla
 E07000155,South Northamptonshire,ltla
-E07000156,Wellingborough,ltla
 E07000163,Craven,ltla
 E07000164,Hambleton,ltla
 E07000165,Harrogate,ltla
@@ -354,12 +342,10 @@ E07000169,Selby,ltla
 E07000170,Ashfield,ltla
 E07000171,Bassetlaw,ltla
 E07000172,Broxtowe,ltla
-E07000173,Gedling,ltla
 E07000174,Mansfield,ltla
 E07000175,Newark and Sherwood,ltla
 E07000176,Rushcliffe,ltla
 E07000177,Cherwell,ltla
-E07000178,Oxford,ltla
 E07000179,South Oxfordshire,ltla
 E07000180,Vale of White Horse,ltla
 E07000181,West Oxfordshire,ltla
@@ -392,24 +378,19 @@ E07000218,North Warwickshire,ltla
 E07000219,Nuneaton and Bedworth,ltla
 E07000220,Rugby,ltla
 E07000221,Stratford-on-Avon,ltla
-E07000222,Warwick,ltla
 E07000223,Adur,ltla
 E07000224,Arun,ltla
 E07000225,Chichester,ltla
 E07000226,Crawley,ltla
-E07000227,Horsham,ltla
 E07000228,Mid Sussex,ltla
-E07000229,Worthing,ltla
 E07000234,Bromsgrove,ltla
 E07000235,Malvern Hills,ltla
-E07000236,Redditch,ltla
 E07000237,Worcester,ltla
 E07000238,Wychavon,ltla
 E07000239,Wyre Forest,ltla
 E07000240,St Albans,ltla
 E07000241,Welwyn Hatfield,ltla
 E07000242,East Hertfordshire,ltla
-E07000243,Stevenage,ltla
 E07000244,East Suffolk,ltla
 E07000245,West Suffolk,ltla
 E07000246,Somerset West and Taunton,ltla
@@ -431,7 +412,6 @@ E08000015,Wirral,ltla
 E08000016,Barnsley,ltla
 E08000017,Doncaster,ltla
 E08000018,Rotherham,ltla
-E08000019,Sheffield,ltla
 E08000021,Newcastle upon Tyne,ltla
 E08000022,North Tyneside,ltla
 E08000023,South Tyneside,ltla
