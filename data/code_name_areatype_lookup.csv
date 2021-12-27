@@ -22,6 +22,7 @@ E06000002,Middlesbrough,utla
 E06000003,Redcar and Cleveland,utla
 E06000004,Stockton-on-Tees,utla
 E06000005,Darlington,utla
+E06000006,Halton,utla
 E06000007,Warrington,utla
 E06000008,Blackburn with Darwen,utla
 E06000009,Blackpool,utla
@@ -36,6 +37,7 @@ E06000017,Rutland,utla
 E06000018,Nottingham,utla
 E06000019,"Herefordshire, County of",utla
 E06000020,Telford and Wrekin,utla
+E06000021,Stoke-on-Trent,utla
 E06000022,Bath and North East Somerset,utla
 E06000023,"Bristol, City of",utla
 E06000024,North Somerset,utla
@@ -59,6 +61,7 @@ E06000043,Brighton and Hove,utla
 E06000044,Portsmouth,utla
 E06000045,Southampton,utla
 E06000046,Isle of Wight,utla
+E06000047,County Durham,utla
 E06000049,Cheshire East,utla
 E06000050,Cheshire West and Chester,utla
 E06000051,Shropshire,utla
@@ -75,14 +78,18 @@ E08000003,Manchester,utla
 E08000004,Oldham,utla
 E08000005,Rochdale,utla
 E08000006,Salford,utla
+E08000007,Stockport,utla
 E08000008,Tameside,utla
 E08000009,Trafford,utla
 E08000010,Wigan,utla
+E08000011,Knowsley,utla
+E08000012,Liverpool,utla
 E08000013,St. Helens,utla
 E08000014,Sefton,utla
 E08000015,Wirral,utla
 E08000016,Barnsley,utla
 E08000017,Doncaster,utla
+E08000018,Rotherham,utla
 E08000019,Sheffield,utla
 E08000021,Newcastle upon Tyne,utla
 E08000022,North Tyneside,utla
@@ -108,6 +115,7 @@ E09000005,Brent,utla
 E09000006,Bromley,utla
 E09000007,Camden,utla
 E09000008,Croydon,utla
+E09000009,Ealing,utla
 E09000010,Enfield,utla
 E09000011,Greenwich,utla
 E09000012,Hackney and City of London,utla
@@ -133,6 +141,7 @@ E09000031,Waltham Forest,utla
 E09000032,Wandsworth,utla
 E09000033,Westminster,utla
 E10000002,Buckinghamshire,utla
+E10000003,Cambridgeshire,utla
 E10000006,Cumbria,utla
 E10000007,Derbyshire,utla
 E10000008,Devon,utla
@@ -150,13 +159,13 @@ E10000021,Northamptonshire,utla
 E10000023,North Yorkshire,utla
 E10000024,Nottinghamshire,utla
 E10000025,Oxfordshire,utla
+E10000027,Somerset,utla
 E10000028,Staffordshire,utla
 E10000029,Suffolk,utla
 E10000030,Surrey,utla
 E10000031,Warwickshire,utla
 E10000032,West Sussex,utla
 E10000034,Worcestershire,utla
-E06000001,Hartlepool,ltla
 E06000002,Middlesbrough,ltla
 E06000003,Redcar and Cleveland,ltla
 E06000004,Stockton-on-Tees,ltla
@@ -171,6 +180,7 @@ E06000012,North East Lincolnshire,ltla
 E06000013,North Lincolnshire,ltla
 E06000014,York,ltla
 E06000015,Derby,ltla
+E06000016,Leicester,ltla
 E06000017,Rutland,ltla
 E06000018,Nottingham,ltla
 E06000019,"Herefordshire, County of",ltla
@@ -190,6 +200,7 @@ E06000034,Thurrock,ltla
 E06000035,Medway,ltla
 E06000036,Bracknell Forest,ltla
 E06000037,West Berkshire,ltla
+E06000038,Reading,ltla
 E06000039,Slough,ltla
 E06000040,Windsor and Maidenhead,ltla
 E06000041,Wokingham,ltla
@@ -233,6 +244,7 @@ E07000037,High Peak,ltla
 E07000038,North East Derbyshire,ltla
 E07000039,South Derbyshire,ltla
 E07000040,East Devon,ltla
+E07000041,Exeter,ltla
 E07000042,Mid Devon,ltla
 E07000043,North Devon,ltla
 E07000044,South Hams,ltla
@@ -242,6 +254,7 @@ E07000047,West Devon,ltla
 E07000061,Eastbourne,ltla
 E07000062,Hastings,ltla
 E07000063,Lewes,ltla
+E07000064,Rother,ltla
 E07000065,Wealden,ltla
 E07000066,Basildon,ltla
 E07000067,Braintree,ltla
@@ -256,6 +269,7 @@ E07000075,Rochford,ltla
 E07000076,Tendring,ltla
 E07000077,Uttlesford,ltla
 E07000078,Cheltenham,ltla
+E07000079,Cotswold,ltla
 E07000080,Forest of Dean,ltla
 E07000081,Gloucester,ltla
 E07000082,Stroud,ltla
@@ -278,6 +292,7 @@ E07000099,North Hertfordshire,ltla
 E07000102,Three Rivers,ltla
 E07000103,Watford,ltla
 E07000105,Ashford,ltla
+E07000106,Canterbury,ltla
 E07000107,Dartford,ltla
 E07000108,Dover,ltla
 E07000109,Gravesham,ltla
@@ -294,12 +309,14 @@ E07000119,Fylde,ltla
 E07000120,Hyndburn,ltla
 E07000121,Lancaster,ltla
 E07000122,Pendle,ltla
+E07000123,Preston,ltla
 E07000124,Ribble Valley,ltla
 E07000125,Rossendale,ltla
 E07000126,South Ribble,ltla
 E07000127,West Lancashire,ltla
 E07000128,Wyre,ltla
 E07000129,Blaby,ltla
+E07000130,Charnwood,ltla
 E07000131,Harborough,ltla
 E07000132,Hinckley and Bosworth,ltla
 E07000133,Melton,ltla
@@ -419,6 +436,7 @@ E08000022,North Tyneside,ltla
 E08000023,South Tyneside,ltla
 E08000024,Sunderland,ltla
 E08000025,Birmingham,ltla
+E08000026,Coventry,ltla
 E08000027,Dudley,ltla
 E08000028,Sandwell,ltla
 E08000029,Solihull,ltla
@@ -433,6 +451,7 @@ E08000037,Gateshead,ltla
 E09000002,Barking and Dagenham,ltla
 E09000003,Barnet,ltla
 E09000004,Bexley,ltla
+E09000005,Brent,ltla
 E09000006,Bromley,ltla
 E09000007,Camden,ltla
 E09000008,Croydon,ltla
