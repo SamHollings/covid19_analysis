@@ -1,5 +1,4 @@
 from statsmodels.tsa.statespace.sarimax import SARIMAX
-import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import plot_tools
 import numpy as np
